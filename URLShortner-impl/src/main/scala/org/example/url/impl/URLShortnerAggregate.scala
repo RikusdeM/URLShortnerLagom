@@ -16,7 +16,6 @@ import com.lightbend.lagom.scaladsl.persistence.AggregateEventTag
 import com.lightbend.lagom.scaladsl.persistence.AkkaTaggerAdapter
 import com.lightbend.lagom.scaladsl.playjson.JsonSerializer
 import com.lightbend.lagom.scaladsl.playjson.JsonSerializerRegistry
-import org.example.hello.api.URLPair
 import org.example.url.api.{URL, URLPair, URLSimple}
 import play.api.libs.json._
 

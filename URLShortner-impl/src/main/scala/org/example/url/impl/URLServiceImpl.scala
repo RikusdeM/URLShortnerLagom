@@ -13,6 +13,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import akka.util.Timeout
 import com.lightbend.lagom.scaladsl.api.transport.BadRequest
+import org.example.url.api.APIExceptions.shortenThrowable
 import org.example.url.api.{URL, URLPair, URLService, URLSimple}
 
 /**

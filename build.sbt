@@ -42,6 +42,7 @@ lazy val `URLShortner-stream-api` = (project in file("URLShortner-stream-api"))
       lagomScaladslApi
     )
   )
+  .dependsOn(`URLShortner-api`)
 
 lazy val `URLShortner-stream-impl` =
   (project in file("URLShortner-stream-impl"))
