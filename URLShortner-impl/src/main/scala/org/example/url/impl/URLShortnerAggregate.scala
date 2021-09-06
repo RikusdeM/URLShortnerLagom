@@ -235,6 +235,8 @@ object URLShortnerSerializerRegistry extends JsonSerializerRegistry {
       // state and events can use play-json, but commands should use jackson because of ActorRef[T] (see application.conf)
       JsonSerializer[Shortened],
       JsonSerializer[URLState],
+      JsonSerializer[URL],
+      JsonSerializer[URLSimple],
       // the replies use play-json as well
       JsonSerializer[URLPair],
       JsonSerializer[Confirmation],

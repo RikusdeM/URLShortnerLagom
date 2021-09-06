@@ -15,17 +15,17 @@ import org.example.url.api.URLService
 class URLShortnerLoader extends LagomApplicationLoader {
 
   override def load(context: LagomApplicationContext): LagomApplication =
-    new HelloApplication(context) {
+    new URLShortnerApplication(context) {
       override def serviceLocator: ServiceLocator = NoServiceLocator
     }
 
   override def loadDevMode(context: LagomApplicationContext): LagomApplication =
-    new HelloApplication(context) with LagomDevModeComponents
+    new URLShortnerApplication(context) with LagomDevModeComponents
 
   override def describeService = Some(readDescriptor[URLService])
 }
 
-abstract class HelloApplication(context: LagomApplicationContext)
+abstract class URLShortnerApplication(context: LagomApplicationContext)
   extends LagomApplication(context)
     with CassandraPersistenceComponents
     with LagomKafkaComponents
