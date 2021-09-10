@@ -50,10 +50,13 @@ class URLServiceImpl(
       val request = URL(URLSimple(originalURL)).getOrElse(URL())
       val urlPair = URLPair(request)
 
+      // todo: Before spawning a new persistent entityActor with the shortenedURL id check if
+      //  that originalURL is already persisted [cassandra] to avoid duplicates.
+
       // Look up the sharded entity (aka the aggregate instance) for the given shortenedURL.
       val ref = entityRef(urlPair.shortened.urlString(true))
 
-      // Tell the aggregate to use the greeting message specified.
+      // Tell the aggregate to shorten the orignalURL specified.
       ref
         .ask[Confirmation](replyTo => Shorten(urlPair, replyTo))
         .map {
