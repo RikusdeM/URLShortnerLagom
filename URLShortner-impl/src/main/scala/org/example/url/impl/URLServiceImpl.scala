@@ -45,7 +45,7 @@ class URLServiceImpl(
         .ask[URLPair](replyTo => Lookup(request, replyTo))
     }
 
-  override def shorten(originalURL: String): ServiceCall[NotUsed, Done] =
+  override def shorten(originalURL: String): ServiceCall[NotUsed, URLSimple] =
     ServiceCall { _ =>
       val request = URL(URLSimple(originalURL)).getOrElse(URL())
       val urlPair = URLPair(request)
@@ -57,7 +57,7 @@ class URLServiceImpl(
       ref
         .ask[Confirmation](replyTo => Shorten(urlPair, replyTo))
         .map {
-          case Accepted => Done
+          case Accepted => URLSimple(urlPair.shortened)
           case _        => throw BadRequest(shortenThrowable(request.urlString(false)))
         }
     }

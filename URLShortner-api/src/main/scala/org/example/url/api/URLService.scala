@@ -26,7 +26,7 @@ trait URLService extends Service {
     * @param id : String
     * @return
     */
-  def shorten(id: String): ServiceCall[NotUsed, Done]
+  def shorten(id: String): ServiceCall[NotUsed, URLSimple]
 
   /**
     * This gets published to Kafka.
