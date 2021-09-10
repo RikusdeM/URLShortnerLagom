@@ -6,6 +6,7 @@ import com.lightbend.lagom.scaladsl.api.broker.kafka.{
   KafkaProperties,
   PartitionKeyStrategy
 }
+import com.lightbend.lagom.scaladsl.api.transport.Method
 import com.lightbend.lagom.scaladsl.api.{Descriptor, Service, ServiceCall}
 
 object URLService {
@@ -18,14 +19,14 @@ trait URLService extends Service {
     * @param shortenedURL : String
     * @return
     */
-  def lookup(shortenedURL: String): ServiceCall[URLSimple, URLPair]
+  def lookup(shortenedURL: String): ServiceCall[NotUsed, URLPair]
 
   /**
     * Example : curl --location --request POST 'localhost:8080/trex/shorten?url=http://reddit.com:80'
     * @param id : String
     * @return
     */
-  def shorten(id: String): ServiceCall[URL, Done]
+  def shorten(id: String): ServiceCall[NotUsed, Done]
 
   /**
     * This gets published to Kafka.
@@ -38,8 +39,8 @@ trait URLService extends Service {
     // @formatter:off
     named("urlShortner")
       .withCalls(
-        pathCall("/trex?url", lookup _),
-        pathCall("/trex/shorten?url", shorten _)
+        restCall(Method.GET,"/trex?url", lookup _),
+        restCall(Method.POST,"/trex/shorten?url", shorten _)
       )
       .withTopics(
         topic(URLService.TOPIC_NAME, urlPairTopic _ )

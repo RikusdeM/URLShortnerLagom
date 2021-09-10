@@ -92,7 +92,7 @@ case class URLState(urlPair: URLPair, timestamp: String) {
       cmd: Shorten
   ): ReplyEffect[URLEvent, URLState] =
     Effect
-      .persist(Shortened(URLPair(cmd.originalURL)))
+      .persist(Shortened(cmd.urlPair))
       .thenReply(cmd.replyTo) { _ =>
         Accepted
       }
@@ -177,7 +177,7 @@ sealed trait URLCommand extends URLCommandSerializable
   * It has a reply type of [[Confirmation]], which is sent back to the caller
   * when all the events emitted by this command are successfully persisted.
   */
-case class Shorten(originalURL: URL, replyTo: ActorRef[Confirmation])
+case class Shorten(urlPair: URLPair, replyTo: ActorRef[Confirmation])
     extends URLCommand
 
 /**

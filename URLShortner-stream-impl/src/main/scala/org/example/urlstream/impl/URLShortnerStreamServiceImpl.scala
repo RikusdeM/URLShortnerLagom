@@ -19,7 +19,7 @@ class URLShortnerStreamServiceImpl(urlService: URLService)
         url
           .mapAsync(8){
             url =>
-              urlService.lookup(url).invoke(URLSimple(url))
+              urlService.lookup(url).invoke()
           }
       )
     }

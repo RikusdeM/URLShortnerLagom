@@ -1,6 +1,6 @@
 package org.example.url.impl
 
-import akka.Done
+import akka.{Done, NotUsed}
 import akka.cluster.sharding.typed.scaladsl.ClusterSharding
 import akka.cluster.sharding.typed.scaladsl.EntityRef
 import com.lightbend.lagom.scaladsl.api.ServiceCall
@@ -33,24 +33,29 @@ class URLServiceImpl(
 
   implicit val timeout = Timeout(5.seconds)
 
-  override def lookup(shortenedURL: String): ServiceCall[URLSimple, URLPair] =
+  override def lookup(shortenedURL: String): ServiceCall[NotUsed, URLPair] =
     ServiceCall { _ =>
+      val request = URLSimple(shortenedURL)
+
       // Look up the sharded entity (aka the aggregate instance) for the given shortenedURL.
       val ref = entityRef(shortenedURL)
 
       // Ask the aggregate instance the lookup command.
       ref
-        .ask[URLPair](replyTo => Lookup(URLSimple(shortenedURL), replyTo))
+        .ask[URLPair](replyTo => Lookup(request, replyTo))
     }
 
-  override def shorten(shortenedURL: String): ServiceCall[URL, Done] =
-    ServiceCall { request =>
+  override def shorten(originalURL: String): ServiceCall[NotUsed, Done] =
+    ServiceCall { _ =>
+      val request = URL(URLSimple(originalURL)).getOrElse(URL())
+      val urlPair = URLPair(request)
+
       // Look up the sharded entity (aka the aggregate instance) for the given shortenedURL.
-      val ref = entityRef(shortenedURL)
+      val ref = entityRef(urlPair.shortened.urlString(true))
 
       // Tell the aggregate to use the greeting message specified.
       ref
-        .ask[Confirmation](replyTo => Shorten(request, replyTo))
+        .ask[Confirmation](replyTo => Shorten(urlPair, replyTo))
         .map {
           case Accepted => Done
           case _        => throw BadRequest(shortenThrowable(request.urlString(false)))
